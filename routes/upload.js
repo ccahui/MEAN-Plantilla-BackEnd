@@ -4,11 +4,11 @@ var app = express();
 
 var Usuario = require('../modelos/usuario');
 var fs = require('fs'); // File System sin ninugn npm install !!!
-
+var middleware = require('../middlewares/autentificacion'); 
 app.use(fileUpload()); // Middleware de archivos
 
 // Donde Tipo es {Medicos, Hospitales, Usuarios} y id es el id de {U, H, M}.
-app.put('/:tipo/:id', (req, res, next) => {
+app.put('/:tipo/:id', [middleware.verificaToken, middleware.verificaADMIN_o_USER],(req, res, next) => {
 
     if (!req.files) {
         return res.status(400).json({

@@ -53,7 +53,7 @@ exports.verificaADMIN_o_USER = function (req, res, next) {
             ok: false,
             mensaje: 'Usuario no Autorizado',
             errors: {
-                messaje: 'No administrador - Ni mismo Usuario'
+                message: 'No administrador - Ni mismo Usuario'
             }
         });
     }
