@@ -3,12 +3,14 @@ var fileUpload = require('express-fileupload');
 var app = express();
 
 var Usuario = require('../modelos/usuario');
+var Heroe = require('../modelos/heroe');
+
 var fs = require('fs'); // File System sin ninugn npm install !!!
-var middleware = require('../middlewares/autentificacion'); 
+var middleware = require('../middlewares/autentificacion');
 app.use(fileUpload()); // Middleware de archivos
 
 // Donde Tipo es {Medicos, Hospitales, Usuarios} y id es el id de {U, H, M}.
-app.put('/:tipo/:id', [middleware.verificaToken, middleware.verificaADMIN_o_USER],(req, res, next) => {
+app.put('/:tipo/:id', [middleware.verificaToken, middleware.verificaADMIN_o_USER], (req, res, next) => {
 
     if (!req.files) {
         return res.status(400).json({
@@ -38,7 +40,7 @@ app.put('/:tipo/:id', [middleware.verificaToken, middleware.verificaADMIN_o_USER
     // Id de los tipos de entidades, USuario, Heroe, Otro
     var id = req.params.id;
     var tipo = req.params.tipo
-    var tiposValidos = ['usuarios']; // Heroes, Otros
+    var tiposValidos = ['usuarios', 'heroes']; // Heroes, Otros
 
     if (tiposValidos.indexOf(tipo) < 0) {
         return res.status(400).json({
@@ -110,6 +112,49 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
                     ok: true,
                     mensaje: 'Imagen de Usuario Actualizada',
                     usuario: usuarioActualizado
+                });
+            });
+        });
+    }
+
+    else if (tipo === 'heroes') {
+        Heroe.findById(id, (err, heroe) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: "Error al buscar Heroe"
+                });
+            }
+            if (!heroe) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'El heroe con el id ' + id + ' no existe',
+                    errors: {
+                        messaje: 'No existe un Heroe con ese ID'
+                    }
+
+                });
+            }
+
+            var pathViejo = './uploads/heroes/' + heroe.img; // Puede ser NULL ?
+            // Si existe elimina la imagen anterior
+            if (fs.existsSync(pathViejo)) {
+                fs.unlink(pathViejo);
+            }
+            heroe.img = nombreArchivo;
+            heroe.save((err, heroeActualizado) => {
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        mensaje: 'Error al actualizar imagen de Heroe',
+                        errors: err
+                    });
+                }
+
+                return res.status(200).json({
+                    ok: true,
+                    mensaje: 'Imagen de Usuario Actualizada',
+                    heroe: heroeActualizado
                 });
             });
         });

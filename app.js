@@ -6,6 +6,7 @@ var mongoose = require('./configuraciones/config').DATA_BASE;
 // Importar Rutas
 var appRoutes = require('./routes/app');
 var usuarioRoutes = require('./routes/usuario'); 
+var heroeRoutes = require('./routes/heroe');
 var loginRoutes = require('./routes/login'); 
 var uploadRoutes = require('./routes/upload');
 var imagenesRouter = require('./routes/imagenes');
@@ -18,6 +19,7 @@ app.use(cors({
 }));
 
 app.use('/usuario',usuarioRoutes);
+app.use('/heroe',heroeRoutes);
 app.use('/login',loginRoutes);
 app.use('/upload',uploadRoutes);
 app.use('/imagenes', imagenesRouter);
