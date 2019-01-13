@@ -42,7 +42,7 @@ app.get('/:id', (req, res) => {
                 mensaje: 'Error al Obtener Heroe'
             });
         }
-        if (!hospital) {
+        if (!heroe) {
             return res.status(400).json({
                 ok: false,
                 mensaje: 'El Heroe ' + id + ' no existe',
@@ -57,8 +57,6 @@ app.get('/:id', (req, res) => {
         });
     });
 });
-
-
 
 // ==============================
 // Crear Nuevo Heroe
@@ -169,4 +167,6 @@ app.delete('/:id', middleware.verificaToken, (req, res) => {
     });
 
 });
+
+
 module.exports = app; 

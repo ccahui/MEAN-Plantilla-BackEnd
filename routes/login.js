@@ -203,7 +203,7 @@ function obtenerMenu( ROLE ){
           icono: 'fa fa-folder-open',
           submenu: [
         //    { titulo: 'usuarios', url: '/usuarios' },
-            { titulo: 'Heroes', url: '/heroes' },
+            { titulo: 'Héroes', url: '/heroes' },
           ]
         },
       ];
