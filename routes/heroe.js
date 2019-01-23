@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
                 });
             }
 
-            Heroe.count({}, (err, conteo) => {
+            Heroe.countDocuments({}, (err, conteo) => {
                 res.status(200).json({
                     ok: true,
                     total: conteo,

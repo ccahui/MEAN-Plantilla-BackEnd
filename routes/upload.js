@@ -95,7 +95,10 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
             var pathViejo = './uploads/usuarios/' + usuario.img; // Puede ser NULL ?
             // Si existe elimina la imagen anterior
             if (fs.existsSync(pathViejo)) {
-                fs.unlink(pathViejo);
+                fs.unlink(pathViejo, err =>{
+                    if(err) // La imagen anterior no es eliminada, ocupa espacio extra 
+                        console.log('Error al eliminar el archivo a ACTUALIZAR  HEROE')
+                });
             }
             usuario.img = nombreArchivo;
             usuario.save((err, usuarioActualizado) => {
@@ -139,7 +142,10 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
             var pathViejo = './uploads/heroes/' + heroe.img; // Puede ser NULL ?
             // Si existe elimina la imagen anterior
             if (fs.existsSync(pathViejo)) {
-                fs.unlink(pathViejo);
+                fs.unlink(pathViejo, err =>{
+                    if(err) // La imagen anterior no es eliminada, ocupa espacio extra 
+                        console.log('Error al eliminar el archivo a ACTUALIZAR  HEROE')
+                });
             }
             heroe.img = nombreArchivo;
             heroe.save((err, heroeActualizado) => {

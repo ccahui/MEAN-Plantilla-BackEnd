@@ -8,7 +8,7 @@ var middleware = require('../middlewares/autentificacion'); // Autentificacion T
 const ADMIN_ROLE = require('../configuraciones/config').ADMIN_ROLE;
 
 // ==============================
-// Obtener todos los Usuarios
+// Obtener todos los Usuarios PAGINATION
 // ==============================
 app.get('/', (req, res) => {
     // Especificando los campos devueltos
@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
                         errors: err
                     });
                 }
-                Usuario.count({}, (err, conteo) => { // Paginacion
+                Usuario.countDocuments({}, (err, conteo) => { // Paginacion
                     res.status(200).json({
                         ok: true,
                         total: conteo, // Total de Usuarios
@@ -35,6 +35,28 @@ app.get('/', (req, res) => {
                     });
                 });
             });
+
+});
+
+app.get('/todo', (req, res) => {
+
+    Usuario.find({}, 'nombre email img role google')
+        .exec((err, usuarios) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error cargando Usuarios',
+                    errors: err
+                });
+            }
+            Usuario.countDocuments({}, (err, conteo) => { // Paginacion
+                res.status(200).json({
+                    ok: true,
+                    total: conteo, // Total de Usuarios
+                    usuarios: usuarios
+                });
+            });
+        });
 
 });
 

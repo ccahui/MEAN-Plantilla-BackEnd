@@ -35,8 +35,8 @@ app.post('/google', (req, res) => {
 
         const payload = ticket.getPayload();
         const userid = payload['sub']; // email picture name 
-       
-       // Quien Inicio Sesion ?
+
+        // Quien Inicio Sesion ?
         Usuario.findOne({
             email: payload.email
         }, (err, usuario) => {
@@ -76,25 +76,25 @@ app.post('/google', (req, res) => {
                 nuevoUsuario.password = ':)'; // Ver Modelo Usuario, el password es REQUIRED
                 nuevoUsuario.img = payload.picture;
                 nuevoUsuario.google = true;
-                
+
                 nuevoUsuario.save((err, usuario) => {
-                    if(err){
+                    if (err) {
                         return res.status(500).json({
-                            ok:false,
+                            ok: false,
                             mensaje: 'Error al crear Usuario - Google',
-                            error:err
+                            error: err
                         });
                     }
-                     // Crear Token
-                     var token = jwt.sign({ // Inicia sesion y los datos son almacenados 
-                         usuario: usuario
-                     }, SEED, {
-                         expiresIn: 14400
-                     }); // 4horas
+                    // Crear Token
+                    var token = jwt.sign({ // Inicia sesion y los datos son almacenados 
+                        usuario: usuario
+                    }, SEED, {
+                        expiresIn: 14400
+                    }); // 4horas
                     res.status(200).json({
                         ok: true,
                         usuario,
-                        mensaje:'Usuario Creado - Google',
+                        mensaje: 'Usuario Creado - Google',
                         id: usuario._id,
                         token: token,
                         menu: obtenerMenu(usuario.role)
@@ -108,7 +108,7 @@ app.post('/google', (req, res) => {
         });
 
 
-       
+
     }
     verify().catch((error) => {
         res.status(400).json({
@@ -121,15 +121,15 @@ app.post('/google', (req, res) => {
 // ==================
 // Renueva Token
 // ==================
-app.get('/renuevatoken', middleware.verificaToken,(req, res)=>{
-   
+app.get('/renuevatoken', middleware.verificaToken, (req, res) => {
+
     var nuevoToken = jwt.sign({ // Inicia sesion y los datos son almacenados 
         usuario: req.usuario // Usuario Actual
     }, SEED, {
         expiresIn: 14400
     }); // 4horas 
     return res.status(200).json({
-        ok:true,
+        ok: true,
         token: nuevoToken
     });
 });
@@ -189,30 +189,61 @@ app.post('/', (req, res, next) => {
 });
 
 
-function obtenerMenu( ROLE ){
-    var menu = [
-        {
-          titulo: 'Principal',
-          icono: 'fa fa-dashboard',
-          submenu: [
-            { titulo: 'Grafico', url: '/tablero' },
-            { titulo: 'Ajustes de Cuenta', url: '/configuraciones' },
-          ]
-        }, {
-          titulo: 'Mantenimiento',
-          icono: 'fa fa-folder-open',
-          submenu: [
-        //    { titulo: 'usuarios', url: '/usuarios' },
-            { titulo: 'Héroes', url: '/heroes' },
-          ]
-        },
-      ];
-      if(ROLE === 'ADMIN_ROLE'){
-          // Push coloca un elemento al final, y el unshift al INICIO
-          menu[1].submenu.unshift({titulo:'Usuarios', url:'/usuarios'});
-      }
-      return menu;
-    
+function obtenerMenu(ROLE) {
+    var menu = [{
+        titulo: 'Principal',
+        icono: 'fa fa-dashboard',
+        submenu: [{
+                titulo: 'Grafico',
+                url: '/tablero'
+            },
+            {
+                titulo: 'Ajustes de Cuenta',
+                url: '/configuraciones'
+            },
+        ]
+    }, {
+        titulo: 'Mantenimiento',
+        icono: 'fa fa-folder-open',
+        submenu: [
+            //    { titulo: 'usuarios', url: '/usuarios' },
+            {
+                titulo: 'Héroes',
+                url: '/heroes'
+            },
+        ]
+    }, {
+        titulo: 'Material',
+        icono: 'fa fa-folder-open',
+        submenu: [
+            //    { titulo: 'usuarios', url: '/usuarios' },
+            {
+                titulo: 'Héroes',
+                url: '/materialHeroes'
+            }, {
+                titulo: 'Formulario Reactivo',
+                url: '/formulario1'
+            }, {
+                titulo: 'Formulario Reactivo',
+                url: '/formulario2'
+            },
+
+        ]
+    }, ];
+    if (ROLE === 'ADMIN_ROLE') {
+        // Push coloca un elemento al final, y el unshift al INICIO
+        menu[1].submenu.unshift({
+            titulo: 'Usuarios',
+            url: '/usuarios'
+        });
+        // push aMaterial
+        menu[2].submenu.unshift({
+            titulo: 'Usuarios',
+            url: '/materialUsuarios'
+        });
+    }
+    return menu;
+
 }
 
 module.exports = app;

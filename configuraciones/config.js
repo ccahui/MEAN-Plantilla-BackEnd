@@ -2,7 +2,10 @@
 const mongoose = require('mongoose');
 const URI = 'mongodb://localhost/heroesDB';
 
-mongoose.connect(URI,{ useNewUrlParser: true }) // Una nueva caracteristica de mngodb
+
+mongoose.set('useCreateIndex', true);
+mongoose.set('useNewUrlParser', true);
+mongoose.connect(URI) // Una nueva caracteristica de mngodb
     .then(db => console.log("Conexion Realizada \x1b[32m%s\x1b[0m",'start'))
     .catch(err => console.error(err));
 
